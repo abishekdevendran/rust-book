@@ -1,15 +1,51 @@
-enum IpAddrKind {
-    V4(u8, u8, u8, u8),
-    V6(String),
+#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
 }
 
-impl IpAddrKind {
-    fn new (v: IpAddrKind) -> IpAddrKind {
-        v
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {
+            println!("State quarter from {:?}!", state);
+            25
+        }
     }
 }
 
 fn main() {
     println!("Hello, world!");
-    let home = IpAddrKind::new(IpAddrKind::V4(127, 0, 0, 1));
+    let val = value_in_cents(Coin::Quarter(UsState::Alabama));
+    println!("val={}", val);
+
+    let v1 = plus_one(Some(5));
+    let v2 = plus_one(None);
+    if let Some(i) = v1 {
+        println!("v1={}", i);
+    } else {
+        println!("v1 is None");
+    }
+
+    if let Some(i) = v2 {
+        println!("v2={}", i);
+    } else {
+        println!("v2 is None");
+    }
+}
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        Some(i) => Some(i + 1),
+        _ => None,
+    }
 }
