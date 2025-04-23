@@ -1,2 +1,3 @@
 **/*.TAG
 **/debug
+.rustc_info.json
