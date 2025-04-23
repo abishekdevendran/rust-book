@@ -1,4 +1,4 @@
-use std::{fs::File, io::{Error, Read, Write}};
+use std::{fs::File, io::{self, Error, Read, Write}};
 
 fn main() {
     // panic!("crash and burn");
@@ -43,6 +43,11 @@ fn main() {
     };
 
     println!("{}", s);
+    let ss = match read_file_contents() {
+        Ok(s) => s,
+        Err(e) => panic!("Error: {}", e),
+    };
+    guessing_game();
 }
 
 fn read_file_contents()->Result<String, Error>{
@@ -65,3 +70,48 @@ fn read_file_contents()->Result<String, Error>{
 }
 
 // Guessing game struct pending
+fn guessing_game() {
+    let secret_number = 42;
+    // let guess = String::new();
+    pub struct Guess {
+        value: u32,
+    }
+
+    impl Guess {
+        pub fn new(value: u32) -> Guess {
+            if !(1..=100).contains(&value) {
+                panic!("Guess value must be between 1 and 100, got {}.", value);
+            }
+            Guess { value }
+        }
+
+        pub fn value(&self) -> u32 {
+            self.value
+        }
+    }
+
+    // let mut guess = Guess::new(50);
+    // read guess from user
+    loop{
+        let mut guess = String::new();
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        let guess = Guess::new(guess);
+        println!("You guessed: {}", guess.value());
+        match guess.value().cmp(&secret_number) {
+            std::cmp::Ordering::Less => println!("Too small!"),
+            std::cmp::Ordering::Greater => println!("Too big!"),
+            std::cmp::Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
+    }
+}
